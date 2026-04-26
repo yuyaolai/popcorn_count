@@ -1,0 +1,245 @@
+:root {
+  --bg-1: #fff8e7;
+  --bg-2: #ffd7a8;
+  --ink: #2a1f1a;
+  --accent: #e85d04;
+  --accent-2: #ff9f1c;
+  --ok: #2a9d8f;
+  --warn: #d62828;
+  --card: rgba(255, 255, 255, 0.82);
+  --shadow: 0 10px 30px rgba(42, 31, 26, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: "Segoe UI", "Trebuchet MS", "Gill Sans", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 20%, #ffe8c2 0%, transparent 38%),
+    radial-gradient(circle at 80% 15%, #ffd18f 0%, transparent 34%),
+    linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  padding: 18px 14px 28px;
+}
+
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+  letter-spacing: 0.02em;
+}
+
+.hero p {
+  margin: 6px 0 16px;
+  font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  opacity: 0.9;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+}
+
+.card.primary {
+  border: 2px solid rgba(232, 93, 4, 0.35);
+}
+
+.label {
+  display: block;
+  font-size: 0.86rem;
+  opacity: 0.82;
+}
+
+.value {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(1.35rem, 5vw, 2.2rem);
+  font-weight: 800;
+}
+
+.status {
+  font-size: clamp(1.05rem, 3vw, 1.4rem);
+}
+
+.controls {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+
+.control {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.control:last-child {
+  margin-bottom: 0;
+}
+
+label {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+input[type="number"],
+input[type="range"] {
+  width: 100%;
+}
+
+input[type="number"] {
+  border: 1px solid #e8c79f;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+output {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.actions {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  background: #6b7280;
+  box-shadow: var(--shadow);
+}
+
+.btn.start {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.btn:disabled {
+  opacity: 0.55;
+}
+
+.meter {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+
+.chart {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+
+.chart h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+#popChart {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #f1d2ad;
+  display: block;
+}
+
+#chartMeta {
+  display: block;
+  margin-top: 6px;
+}
+
+.meter-track {
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(42, 31, 26, 0.1);
+}
+
+.meter-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ok), var(--accent), var(--warn));
+  transition: width 120ms linear;
+}
+
+.alert {
+  margin-top: 14px;
+  border-radius: 16px;
+  padding: 12px;
+  background: #fff3f3;
+  border: 2px solid #ffb3b3;
+  animation: pulse 1.25s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.tips {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.tips h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.tips ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.tips li {
+  margin: 4px 0;
+}
+
+@media (max-width: 560px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}

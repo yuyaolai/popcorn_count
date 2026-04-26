@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Popcorn Pop Counter</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <h1>Popcorn Pop Counter</h1>
+      <p>Listen to pops and tell me when it is time to stop the microwave.</p>
+    </header>
+
+    <section class="stats" aria-live="polite">
+      <article class="card primary">
+        <span class="label">Pops in Window</span>
+        <span id="windowCount" class="value">0</span>
+      </article>
+      <article class="card">
+        <span class="label">Total Pops</span>
+        <span id="totalCount" class="value">0</span>
+      </article>
+      <article class="card">
+        <span class="label">Status</span>
+        <span id="statusText" class="value status">Idle</span>
+      </article>
+    </section>
+
+    <section class="controls" aria-label="Detection controls">
+      <div class="control">
+        <label for="windowSeconds">Window length (seconds)</label>
+        <input id="windowSeconds" type="number" min="5" max="30" value="10" />
+      </div>
+      <div class="control">
+        <label for="stopThreshold">Stop when pops in window are less than</label>
+        <input id="stopThreshold" type="number" min="1" max="20" value="3" />
+      </div>
+      <div class="control">
+        <label for="armingPops">Arming pops (enable stop alert after this many pops)</label>
+        <input id="armingPops" type="number" min="1" max="50" value="10" />
+      </div>
+      <div class="control">
+        <label for="minSecondsSinceStart">Minimum seconds since Start before alert</label>
+        <input id="minSecondsSinceStart" type="number" min="10" max="300" value="60" />
+      </div>
+      <div class="control">
+        <label for="sensitivity">Sensitivity</label>
+        <input id="sensitivity" type="range" min="1" max="10" value="6" />
+        <output id="sensitivityValue" for="sensitivity">6</output>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="startBtn" class="btn start">Start Listening</button>
+      <button id="stopBtn" class="btn" disabled>Stop</button>
+      <button id="resetBtn" class="btn">Reset Counter</button>
+    </section>
+
+    <section class="meter" aria-label="Current sound meter">
+      <div class="meter-track">
+        <div id="meterFill" class="meter-fill"></div>
+      </div>
+      <small>Live sound level (helps with setup)</small>
+    </section>
+
+    <section class="chart" aria-label="Live pop history">
+      <h2>Live Pop Plot</h2>
+      <canvas id="popChart" height="180"></canvas>
+      <small id="chartMeta">Waiting to start...</small>
+    </section>
+
+    <section id="alertBox" class="alert" hidden>
+      <strong>Time to stop!</strong>
+      <p>Pop rate dropped below your threshold.</p>
+    </section>
+
+    <footer class="tips">
+      <h2>Quick Tips</h2>
+      <ul>
+        <li>Place your phone near (not on) the microwave.</li>
+        <li>Keep background noise low for best detection.</li>
+        <li>Use Chrome on Android and allow microphone access.</li>
+      </ul>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
