@@ -11,7 +11,10 @@ const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const resetBtn = document.getElementById("resetBtn");
 const testAlarmBtn = document.getElementById("testAlarmBtn");
+const silenceAlarmBtn = document.getElementById("silenceAlarmBtn");
 const meterFillEl = document.getElementById("meterFill");
+const thresholdLineEl = document.getElementById("thresholdLine");
+const thresholdMetaEl = document.getElementById("thresholdMeta");
 const alertBox = document.getElementById("alertBox");
 const popChartCanvas = document.getElementById("popChart");
 const chartMetaEl = document.getElementById("chartMeta");
@@ -32,6 +35,7 @@ let listeningStartedAt = 0;
 let didAlert = false;
 let chartPoints = [];
 let lastChartSampleAt = 0;
+let alarmLoopId = null;
 
 const minPopGapMs = 180;
 const chartSampleIntervalMs = 250;
@@ -148,6 +152,30 @@ function playAlarmSound() {
   }
 }
 
+function updateThresholdVisual(dynamicThreshold) {
+  const thresholdPct = clamp((dynamicThreshold / 0.3) * 100, 0, 100);
+  thresholdLineEl.style.left = `${thresholdPct}%`;
+  thresholdMetaEl.textContent = `Trigger threshold: ${thresholdPct.toFixed(1)}% meter`;
+}
+
+function startAlarmLoop() {
+  if (alarmLoopId) {
+    return;
+  }
+
+  playAlarmSound();
+  alarmLoopId = setInterval(playAlarmSound, 1300);
+}
+
+function stopAlarmLoop() {
+  if (!alarmLoopId) {
+    return;
+  }
+
+  clearInterval(alarmLoopId);
+  alarmLoopId = null;
+}
+
 function appendChartPoint(now, force = false) {
   if (!listeningStartedAt) {
     return;
@@ -216,7 +244,7 @@ function triggerStopAlert() {
   if (navigator.vibrate) {
     navigator.vibrate([150, 100, 150]);
   }
-  playAlarmSound();
+  startAlarmLoop();
 }
 
 function testAlarm() {
@@ -224,6 +252,16 @@ function testAlarm() {
     navigator.vibrate([120, 80, 120]);
   }
   playAlarmSound();
+}
+
+function silenceAlarm() {
+  stopAlarmLoop();
+  alertBox.hidden = true;
+  if (startBtn.disabled) {
+    setStatus("Listening (alarm silenced)");
+  } else {
+    setStatus("Alarm silenced");
+  }
 }
 
 function processAudio() {
@@ -252,6 +290,7 @@ function processAudio() {
   const sensitivityScale = (11 - sensitivity) / 10;
   const dynamicThreshold = Math.max(0.055 * sensitivityScale, noiseFloor * (4.1 - sensitivity * 0.2));
   const crest = peak / Math.max(rms, 0.0001);
+  updateThresholdVisual(dynamicThreshold);
 
   const now = performance.now();
   const likelyPop = peak > dynamicThreshold && crest > 3.5;
@@ -297,6 +336,7 @@ async function startListening() {
   try {
     alertBox.hidden = true;
     didAlert = false;
+    stopAlarmLoop();
     listeningStartedAt = 0;
     setStatus("Requesting microphone...");
 
@@ -337,6 +377,8 @@ async function startListening() {
 }
 
 function stopListening() {
+  stopAlarmLoop();
+
   if (animationId) {
     cancelAnimationFrame(animationId);
     animationId = null;
@@ -369,6 +411,8 @@ function stopListening() {
 }
 
 function resetCounter() {
+  stopAlarmLoop();
+
   totalPops = 0;
   popTimes = [];
   lastPopAt = 0;
@@ -413,7 +457,9 @@ startBtn.addEventListener("click", startListening);
 stopBtn.addEventListener("click", stopListening);
 resetBtn.addEventListener("click", resetCounter);
 testAlarmBtn.addEventListener("click", testAlarm);
+silenceAlarmBtn.addEventListener("click", silenceAlarm);
 window.addEventListener("resize", drawChart);
 
 updateCounts();
 resetChart();
+updateThresholdVisual(0.055);
