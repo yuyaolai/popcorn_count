@@ -15,9 +15,10 @@ This app uses your phone microphone to estimate popcorn pops in real time.
 
 1. Open Chrome on your Android phone.
 2. Open this page (host it or open locally with a simple web server).
-3. Tap **Start Listening** and allow microphone permission.
-4. Put your phone close to the microwave (not touching it).
-5. Adjust sensitivity if needed:
+3. Tap **Test Alarm** once to verify your phone volume and vibration.
+4. Tap **Start Listening** and allow microphone permission.
+5. Put your phone close to the microwave (not touching it).
+6. Adjust sensitivity if needed:
    - Higher sensitivity catches quieter pops but may false-trigger in noisy rooms.
    - Lower sensitivity reduces false triggers but may miss quieter pops.
 

@@ -10,6 +10,7 @@ const sensitivityValueEl = document.getElementById("sensitivityValue");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const resetBtn = document.getElementById("resetBtn");
+const testAlarmBtn = document.getElementById("testAlarmBtn");
 const meterFillEl = document.getElementById("meterFill");
 const alertBox = document.getElementById("alertBox");
 const popChartCanvas = document.getElementById("popChart");
@@ -52,7 +53,7 @@ function drawChart() {
 
   const width = popChartCanvas.width;
   const height = popChartCanvas.height;
-  const pad = 26;
+  const pad = 34;
 
   chartCtx.clearRect(0, 0, width, height);
   chartCtx.fillStyle = "#fffdf8";
@@ -66,9 +67,23 @@ function drawChart() {
   chartCtx.lineTo(width - pad, height - pad);
   chartCtx.stroke();
 
+  const fontPx = 12 * (window.devicePixelRatio || 1);
+  chartCtx.fillStyle = "rgba(42, 31, 26, 0.75)";
+  chartCtx.font = `${fontPx}px Segoe UI`;
+  chartCtx.textAlign = "center";
+  chartCtx.fillText("Time (s)", width / 2, height - 8 * (window.devicePixelRatio || 1));
+
+  chartCtx.save();
+  chartCtx.translate(10 * (window.devicePixelRatio || 1), height / 2);
+  chartCtx.rotate(-Math.PI / 2);
+  chartCtx.textAlign = "center";
+  chartCtx.fillText("Total Pops", 0, 0);
+  chartCtx.restore();
+
   if (chartPoints.length < 2) {
     chartCtx.fillStyle = "rgba(42, 31, 26, 0.6)";
-    chartCtx.font = `${12 * (window.devicePixelRatio || 1)}px Segoe UI`;
+    chartCtx.font = `${fontPx}px Segoe UI`;
+    chartCtx.textAlign = "left";
     chartCtx.fillText("Start listening to draw live plot", pad + 8, height / 2);
     return;
   }
@@ -95,6 +110,42 @@ function drawChart() {
   }
 
   chartCtx.stroke();
+}
+
+function playAlarmSound() {
+  const activeContext = audioContext && audioContext.state !== "closed" ? audioContext : new AudioContext();
+  const shouldCloseContext = activeContext !== audioContext;
+
+  if (activeContext.state === "suspended") {
+    activeContext.resume();
+  }
+
+  const now = activeContext.currentTime;
+  const beepPattern = [0, 0.28, 0.56, 0.84];
+
+  for (let i = 0; i < beepPattern.length; i += 1) {
+    const start = now + beepPattern[i];
+    const osc = activeContext.createOscillator();
+    const gain = activeContext.createGain();
+
+    osc.type = "square";
+    osc.frequency.value = 920;
+    gain.gain.value = 0.0001;
+
+    osc.connect(gain);
+    gain.connect(activeContext.destination);
+
+    osc.start(start);
+    gain.gain.exponentialRampToValueAtTime(0.18, start + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.17);
+    osc.stop(start + 0.19);
+  }
+
+  if (shouldCloseContext) {
+    setTimeout(() => {
+      activeContext.close();
+    }, 1400);
+  }
 }
 
 function appendChartPoint(now, force = false) {
@@ -165,20 +216,14 @@ function triggerStopAlert() {
   if (navigator.vibrate) {
     navigator.vibrate([150, 100, 150]);
   }
+  playAlarmSound();
+}
 
-  const beep = new AudioContext();
-  const osc = beep.createOscillator();
-  const gain = beep.createGain();
-  osc.type = "triangle";
-  osc.frequency.value = 880;
-  gain.gain.value = 0.0001;
-  osc.connect(gain);
-  gain.connect(beep.destination);
-  osc.start();
-  gain.gain.exponentialRampToValueAtTime(0.12, beep.currentTime + 0.01);
-  gain.gain.exponentialRampToValueAtTime(0.0001, beep.currentTime + 0.22);
-  osc.stop(beep.currentTime + 0.24);
-  osc.onended = () => beep.close();
+function testAlarm() {
+  if (navigator.vibrate) {
+    navigator.vibrate([120, 80, 120]);
+  }
+  playAlarmSound();
 }
 
 function processAudio() {
@@ -367,6 +412,7 @@ minSecondsSinceStartEl.addEventListener("change", () => {
 startBtn.addEventListener("click", startListening);
 stopBtn.addEventListener("click", stopListening);
 resetBtn.addEventListener("click", resetCounter);
+testAlarmBtn.addEventListener("click", testAlarm);
 window.addEventListener("resize", drawChart);
 
 updateCounts();

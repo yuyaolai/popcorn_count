@@ -122,7 +122,7 @@ output {
 .actions {
   margin-top: 12px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -140,6 +140,10 @@ output {
 
 .btn.start {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.btn.test {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
 }
 
 .btn:disabled {
