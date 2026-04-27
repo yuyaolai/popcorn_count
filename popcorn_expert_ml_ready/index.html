@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Popcorn Expert ML Ready</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="eyebrow">One-tap popcorn analysis</div>
+      <h1>Popcorn Expert ML Ready</h1>
+      <p class="lede">Tap once, let it calibrate the room, and get an alert when popping falls off. If you add a TensorFlow.js model later, the app will use it automatically.</p>
+    </section>
+
+    <section class="status-panel" aria-live="polite">
+      <div class="status-label">Status</div>
+      <div id="statusText" class="status-value">Idle</div>
+      <div id="statusHint" class="status-hint">Tap Start Analysis to begin.</div>
+      <div id="classifierState" class="classifier-chip">Classifier: heuristic fallback</div>
+    </section>
+
+    <section class="stats" aria-live="polite">
+      <article class="card accent">
+        <span class="label">Total Pops</span>
+        <span id="totalCount" class="value">0</span>
+      </article>
+      <article class="card">
+        <span class="label">Pops in Window</span>
+        <span id="windowCount" class="value">0</span>
+      </article>
+      <article class="card">
+        <span class="label">Alarm State</span>
+        <span id="alarmState" class="value small">Silent</span>
+      </article>
+    </section>
+
+    <section class="actions" aria-label="Primary actions">
+      <button id="startBtn" class="btn start">Start Analysis</button>
+      <button id="stopBtn" class="btn" disabled>Stop</button>
+      <button id="silenceAlarmBtn" class="btn alarm">Silence Alarm</button>
+    </section>
+
+    <section class="training-card" aria-label="Training clip export">
+      <div class="chart-header">
+        <h2>Training Clip Export</h2>
+        <span>Collect labeled clips for TensorFlow training</span>
+      </div>
+      <div class="training-grid">
+        <div class="control">
+          <label for="clipLabel">Clip label</label>
+          <select id="clipLabel">
+            <option value="pop">pop</option>
+            <option value="non-pop">non-pop</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="clipSeconds">Export last seconds</label>
+          <select id="clipSeconds">
+            <option value="10">10 seconds</option>
+            <option value="30">30 seconds</option>
+            <option value="60" selected>60 seconds</option>
+          </select>
+        </div>
+      </div>
+      <button id="exportClipBtn" class="btn test full" disabled>Export Training Clip</button>
+      <small>Start Analysis first, then export the last audio window with a label.</small>
+    </section>
+
+    <section class="meter-card" aria-label="Live sound level">
+      <div class="meter-header">
+        <span>Live sound level</span>
+        <span id="thresholdMeta">Trigger threshold: --</span>
+      </div>
+      <div class="meter-track">
+        <div id="meterFill" class="meter-fill"></div>
+        <div id="thresholdLine" class="threshold-line" aria-hidden="true"></div>
+      </div>
+      <small>Peak level and trigger boundary update in real time.</small>
+    </section>
+
+    <section class="chart-card" aria-label="Live pop history">
+      <div class="chart-header">
+        <h2>Live Pop Plot</h2>
+        <span id="chartMeta">Waiting to start...</span>
+      </div>
+      <canvas id="popChart" height="180"></canvas>
+    </section>
+
+    <section id="alertBox" class="alert" hidden>
+      <strong>Best time to stop</strong>
+      <p>The pop rate has dropped below the threshold.</p>
+      <button id="silenceAlertBtn" class="btn alarm full">Silence Alarm</button>
+    </section>
+
+    <section class="tips">
+      <h2>How this version works</h2>
+      <ul>
+        <li>One tap starts calibration and live listening.</li>
+        <li>It defaults to adaptive heuristics if no trained model is present.</li>
+        <li>Drop a TensorFlow.js model into the model folder later to enable ML mode.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

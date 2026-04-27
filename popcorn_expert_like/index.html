@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Popcorn Expert Style</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="eyebrow">Adaptive sound analysis</div>
+      <h1>Popcorn Expert Style</h1>
+      <p class="lede">Listen to your microwave, count real pops live, and tell you when the popping has dropped enough to stop.</p>
+    </section>
+
+    <section class="status-panel" aria-live="polite">
+      <div class="status-label">Status</div>
+      <div id="statusText" class="status-value">Idle</div>
+      <div id="statusHint" class="status-hint">Tap Start Analysis to calibrate and begin.</div>
+    </section>
+
+    <section class="stats" aria-live="polite">
+      <article class="card accent">
+        <span class="label">Total Pops</span>
+        <span id="totalCount" class="value">0</span>
+      </article>
+      <article class="card">
+        <span class="label">Pops in Window</span>
+        <span id="windowCount" class="value">0</span>
+      </article>
+      <article class="card">
+        <span class="label">Alarm State</span>
+        <span id="alarmState" class="value small">Silent</span>
+      </article>
+    </section>
+
+    <section class="controls" aria-label="Detection controls">
+      <div class="control">
+        <label for="sensitivity">Sensitivity</label>
+        <input id="sensitivity" type="range" min="1" max="10" value="6" />
+        <output id="sensitivityValue" for="sensitivity">6</output>
+      </div>
+      <div class="control-grid">
+        <div class="control">
+          <label for="windowSeconds">Window length (seconds)</label>
+          <input id="windowSeconds" type="number" min="5" max="30" value="10" />
+        </div>
+        <div class="control">
+          <label for="stopThreshold">Stop below</label>
+          <input id="stopThreshold" type="number" min="1" max="20" value="3" />
+        </div>
+        <div class="control">
+          <label for="armingPops">Arming pops</label>
+          <input id="armingPops" type="number" min="1" max="50" value="10" />
+        </div>
+        <div class="control">
+          <label for="minSecondsSinceStart">Min seconds before alert</label>
+          <input id="minSecondsSinceStart" type="number" min="10" max="300" value="60" />
+        </div>
+        <div class="control">
+          <label for="calibrationSeconds">Calibration seconds</label>
+          <input id="calibrationSeconds" type="number" min="2" max="10" value="3" />
+        </div>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="startBtn" class="btn start">Start Analysis</button>
+      <button id="stopBtn" class="btn" disabled>Stop</button>
+      <button id="silenceAlarmBtn" class="btn alarm">Silence Alarm</button>
+      <button id="testAlarmBtn" class="btn test">Test Alarm</button>
+      <button id="resetBtn" class="btn ghost">Reset</button>
+    </section>
+
+    <section class="meter-card" aria-label="Live sound level">
+      <div class="meter-header">
+        <span>Live sound level</span>
+        <span id="thresholdMeta">Trigger threshold: --</span>
+      </div>
+      <div class="meter-track">
+        <div id="meterFill" class="meter-fill"></div>
+        <div id="thresholdLine" class="threshold-line" aria-hidden="true"></div>
+      </div>
+      <small>Peak level and current trigger boundary update in real time.</small>
+    </section>
+
+    <section class="chart-card" aria-label="Live pop history">
+      <div class="chart-header">
+        <h2>Live Pop Plot</h2>
+        <span id="chartMeta">Waiting to start...</span>
+      </div>
+      <canvas id="popChart" height="180"></canvas>
+    </section>
+
+    <section id="alertBox" class="alert" hidden>
+      <strong>Best time to stop</strong>
+      <p>The pop rate has dropped below your threshold.</p>
+      <button id="silenceAlertBtn" class="btn alarm full">Silence Alarm</button>
+    </section>
+
+    <section class="tips">
+      <h2>How it differs</h2>
+      <ul>
+        <li>More streamlined, “expert app” style UI.</li>
+        <li>Starts with a short calibration phase to learn background noise.</li>
+        <li>Still uses adaptive audio heuristics, not a trained ML model.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
